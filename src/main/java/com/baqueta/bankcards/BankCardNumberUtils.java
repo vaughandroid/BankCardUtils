@@ -1,15 +1,13 @@
 package com.baqueta.bankcards;
 
-import java.math.BigDecimal;
-
 /**
  * Tools for validation using the Luhn algorithm.
  *
  * @author c.vaughan@outlook.com
  */
-public class LuhnUtils {
+public class BankCardNumberUtils {
 
-    private static final String REGEX_NUMBERS_ONLY = "[0-9]+";
+    private static final String REGEX_NUMBERS_ONLY = "[0-9]*";
 
     /**
      * Check whether the given number passes a Luhn algorithm check.
@@ -20,14 +18,14 @@ public class LuhnUtils {
      * @throws java.lang.IllegalArgumentException if numberString contains invalid characters, or isn't at least 2
      *  digits
      */
-    public static boolean validate(String numberString) {
-        final String normalised = normalise(numberString);
+    public static boolean luhnCheck(String numberString) {
+        final String normalised = normaliseCardNumber(numberString);
         if (normalised.length() < 2) {
             throw new IllegalArgumentException("Number must be at least 2 digits: '" + numberString + "'");
         }
 
         final int expectedCheckDigit = Character.getNumericValue(normalised.charAt(normalised.length() - 1));
-        final int calculatedCheckDigit = calculateCheckDigit(normalised.substring(0, normalised.length() - 1));
+        final int calculatedCheckDigit = calculateLuhnCheckDigit(normalised.substring(0, normalised.length() - 1));
 
         return expectedCheckDigit == calculatedCheckDigit;
     }
@@ -37,11 +35,10 @@ public class LuhnUtils {
      *
      * @param numberString number to calculate the check digit for (may contain spaces)
      * @return Luhn check digit
-     * @throws java.lang.IllegalArgumentException if numberString contains invalid characters, or isn't at least 2
-     *  digits
+     * @throws java.lang.IllegalArgumentException if numberString contains invalid characters
      */
-    public static int calculateCheckDigit(final String numberString) {
-        String normalised = normalise(numberString);
+    public static int calculateLuhnCheckDigit(final String numberString) {
+        String normalised = normaliseCardNumber(numberString);
 
         // Sum the digits.
         int sum = 0;
@@ -65,7 +62,14 @@ public class LuhnUtils {
         return (sum * 9) % 10;
     }
 
-    private static String normalise(final String numberString) {
+    /**
+     * Normalise a bank card number string.
+     *
+     * @param numberString card number (may contain spaces)
+     * @return normalised card number string
+     * @throws java.lang.IllegalArgumentException if numberString contains invalid characters
+     */
+    static String normaliseCardNumber(final String numberString) {
         if (numberString == null) {
             throw new NullPointerException("number cannot be null");
         }

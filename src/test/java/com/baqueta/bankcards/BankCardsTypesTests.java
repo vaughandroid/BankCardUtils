@@ -3,7 +3,9 @@ package com.baqueta.bankcards;
 import junit.framework.TestCase;
 
 /**
- * Unit tests for {@link BankCardTypes}
+ * Unit tests for {@link BankCardTypes}.
+ *
+ * @author c.vaughan@outlook.com
  */
 public class BankCardsTypesTests extends TestCase {
 
