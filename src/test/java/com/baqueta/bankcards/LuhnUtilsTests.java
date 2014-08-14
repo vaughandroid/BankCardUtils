@@ -1,5 +1,6 @@
-package com.baqueta.bankcardutils;
+package com.baqueta.bankcards;
 
+import com.baqueta.bankcards.LuhnUtils;
 import junit.framework.TestCase;
 
 public class LuhnUtilsTests extends TestCase {

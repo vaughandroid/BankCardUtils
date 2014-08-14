@@ -1,4 +1,4 @@
-package com.baqueta.bankcardutils;
+package com.baqueta.bankcards;
 
 import java.math.BigDecimal;
 
