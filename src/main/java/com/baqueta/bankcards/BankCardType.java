@@ -11,6 +11,7 @@ import java.util.Set;
 public enum BankCardType {
 
     AMERICAN_EXPRESS("American Express", true, 15, Single("34"), Single("37"));
+    // TODO: Other card types
 
     /**
      * Get the set of card types which potentially match a given card number string.
@@ -84,6 +85,9 @@ public enum BankCardType {
                 return true;
             }
         }
+        // TODO: Exclude if length exceeds maximum
         return false;
     }
+
+    // TODO: Add validate(String numberString)
 }
