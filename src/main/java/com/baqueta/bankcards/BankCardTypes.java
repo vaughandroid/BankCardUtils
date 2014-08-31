@@ -8,59 +8,82 @@ import java.util.Set;
  *
  * @author c.vaughan@outlook.com
  */
-public enum BankCardTypes {
+public enum BankCardTypes { // TODO: Rename to BankCardType
 
-    AMERICAN_EXPRESS("American Express", "^[34|37]", true, 15);
+    AMERICAN_EXPRESS("American Express", true, 15, Single("34"), Single("37"));
 
     /**
-     * Get the set of card types which match a given card number string.
+     * Get the set of card types which potentially match a given card number string.
      * If the card number is incomplete, multiple matches may be returned.
      *
      * @param numberString card number to find matching card types for (may be a partial number, and must only contain
      *                     digits and spaces)
      * @return the set of bank card types which match numberString
-     * @throws java.lang.IllegalArgumentException if numberString contains invalid characters
+     * @throws java.lang.IllegalArgumentException if numberString is empty or contains invalid characters
      */
-    public static Set<BankCardTypes> getMatchingCardTypes(String numberString) {
+    public static Set<BankCardTypes> getPotentialMatches(String numberString) {
         if (numberString == null) {
             throw new NullPointerException();
         }
+        if (numberString == "") {
+            throw new IllegalArgumentException("numberString cannot be empty");
+        }
         HashSet<BankCardTypes> set = new HashSet<BankCardTypes>();
-
+        for (BankCardTypes type : BankCardTypes.values()) {
+            if (type.isPotentialMatch(numberString)) {
+                set.add(type);
+            }
+        }
         return set;
     }
 
+    private static SingleNumberMatcher Single(String str) {
+        return new SingleNumberMatcher(str);
+    }
+
+    private static RangeNumberMatcher Range(String min, String max) {
+        return new RangeNumberMatcher(min, max);
+    }
+
     private final String name;
-    private final String regexPattern;
     private final boolean usesLuhnValidation;
     private final int minLength;
     private final int maxLength;
+    private final NumberMatcher[] matchers;
 
-    BankCardTypes(String name, String regexPattern, boolean usesLuhnValidation, int length) {
-        this(name, regexPattern, usesLuhnValidation, length, length);
+    BankCardTypes(String name, boolean usesLuhnValidation, int length, NumberMatcher... matchers) {
+        this(name, usesLuhnValidation, length, length, matchers);
     }
 
-    BankCardTypes(String name, String regexPattern, boolean usesLuhnValidation, int minLength, int maxLength) {
+    BankCardTypes(String name, boolean usesLuhnValidation, int minLength, int maxLength, NumberMatcher... matchers) {
         this.name = name;
-        this.regexPattern = regexPattern;
         this.usesLuhnValidation = usesLuhnValidation;
         this.minLength = minLength;
         this.maxLength = maxLength;
+        this.matchers = matchers;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getRegexPattern() {
-        return regexPattern;
-    }
-
     public boolean usesLuhnValidation() {
         return usesLuhnValidation;
     }
 
-    public boolean matches(String cardNumber) {
-        return BankCardNumberUtils.normaliseCardNumber(cardNumber).matches(regexPattern);
+    /**
+     * Check if the card type is a potential match for the given card number string.
+     * @param numberString card number to find matching card types for (may be a partial number, and must only contain
+     *                     digits and spaces)
+     * @return true if this card type is a potential match
+     */
+    public boolean isPotentialMatch(String numberString) {
+        String normalisedNumberString = BankCardNumberUtils.normaliseCardNumber(numberString);
+        for (NumberMatcher matcher : matchers) {
+            if (matcher.isPotentialMatch(normalisedNumberString)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

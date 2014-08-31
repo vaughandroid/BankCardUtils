@@ -11,20 +11,60 @@ import java.util.Set;
  */
 public class BankCardsTypesTests extends TestCase {
 
-    public void test_getMatchingCardTypes_EmptyString_ReturnsEmptySet() {
-        assertTrue(BankCardTypes.getMatchingCardTypes("").isEmpty());
+    private static final String VALID_AMERICAN_EXPRESS = "34343434343434";
+
+    private static final String[] PARTIALS_AMERICAN_EXPRESS = { "3", "34", "37" };
+
+    private static void assertContains(Set<?> set, Object object) {
+        if (!set.contains(object)) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("\"" + object + "\" does not exist in set: {");
+            for (Object obj : set) {
+                sb.append(obj);
+            }
+            if (!set.isEmpty()) {
+                sb.delete(sb.length() - 1, sb.length());
+            }
+            sb.append('}');
+            fail(sb.toString());
+        }
     }
 
-    public void test_getMatchingCardTypes_Null_ThrowsNullPointerException() {
+    private static void checkPotentialsList(String[] potentialMatches, BankCardTypes type) {
+        for (String potential : potentialMatches) {
+            assertTrue("Failed for \"" + potential + "\"", BankCardTypes.getPotentialMatches(potential).contains(type));
+        }
+    }
+
+    public void test_getPotentialMatches_EmptyString_ReturnsEmptySet() {
         try {
-            BankCardTypes.getMatchingCardTypes(null);
+            BankCardTypes.getPotentialMatches("");
+            fail();
+        } catch (IllegalArgumentException expected) {}
+    }
+
+    public void test_getPotentialMatches_Null_ThrowsNullPointerException() {
+        try {
+            BankCardTypes.getPotentialMatches(null);
             fail();
         } catch (NullPointerException expected) {}
     }
 
-    public void test_getMatchingCardTypes_UnmatchedNumber_ReturnsEmptySet() {
+    public void test_getPotentialMatches_UnmatchedNumber_ReturnsEmptySet() {
         final String unmatchedNumber = "999";
-        Set<BankCardTypes> set = BankCardTypes.getMatchingCardTypes("999");
+        Set<BankCardTypes> set = BankCardTypes.getPotentialMatches("999");
         assertTrue("Found " + set.size() + " unexpected matches for: \"" + unmatchedNumber + "\"", set.isEmpty());
+    }
+
+    public void test_getPotentialMatches_ValidAmex_ReturnedSetIncludesAmex() {
+        assertContains(BankCardTypes.getPotentialMatches(VALID_AMERICAN_EXPRESS), BankCardTypes.AMERICAN_EXPRESS);
+    }
+
+    public void test_getPotentialMatches_PartialAmex_ReturnedSetIncludesAmex() {
+        checkPotentialsList(PARTIALS_AMERICAN_EXPRESS, BankCardTypes.AMERICAN_EXPRESS);
+    }
+
+    public void test_getPotentialMatches_NotMatchingAmex_ReturnedSetExcludesAmex() {
+        assertFalse(BankCardTypes.getPotentialMatches("30").contains(BankCardTypes.AMERICAN_EXPRESS));
     }
 }
