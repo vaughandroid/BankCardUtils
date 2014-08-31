@@ -13,7 +13,7 @@ public class BankCardNumberUtils {
      * Check whether the given number passes a Luhn algorithm check.
      * The last digit is used as the check digit.
      *
-     * @param numberString number to validate (may contain spaces)
+     * @param numberString number to validate (must include at least 2 digits, and must only contain digits and spaces)
      * @return whether the check digit was valid
      * @throws java.lang.IllegalArgumentException if numberString contains invalid characters, or isn't at least 2
      *  digits
@@ -33,7 +33,7 @@ public class BankCardNumberUtils {
     /**
      * Calculate the Luhn check digit for a given number.
      *
-     * @param numberString number to calculate the check digit for (may contain spaces)
+     * @param numberString number to calculate the check digit for (must only contain digits and spaces)
      * @return Luhn check digit
      * @throws java.lang.IllegalArgumentException if numberString contains invalid characters
      */
@@ -65,7 +65,7 @@ public class BankCardNumberUtils {
     /**
      * Normalise a bank card number string.
      *
-     * @param numberString card number (may contain spaces)
+     * @param numberString card number (may be a partial number, and must only contain digits and spaces)
      * @return normalised card number string
      * @throws java.lang.IllegalArgumentException if numberString contains invalid characters
      */
