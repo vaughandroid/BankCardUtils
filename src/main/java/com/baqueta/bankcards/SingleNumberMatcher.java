@@ -9,8 +9,8 @@ class SingleNumberMatcher implements NumberMatcher {
 
     private final String pattern;
 
-    SingleNumberMatcher(int number) {
-        this.pattern = Integer.toString(number);
+    SingleNumberMatcher(String pattern) {
+        this.pattern = pattern;
     }
 
     @Override
