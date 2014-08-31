@@ -8,7 +8,7 @@ import java.util.Set;
  *
  * @author c.vaughan@outlook.com
  */
-public enum BankCardTypes { // TODO: Rename to BankCardType
+public enum BankCardType {
 
     AMERICAN_EXPRESS("American Express", true, 15, Single("34"), Single("37"));
 
@@ -21,15 +21,15 @@ public enum BankCardTypes { // TODO: Rename to BankCardType
      * @return the set of bank card types which match numberString
      * @throws java.lang.IllegalArgumentException if numberString is empty or contains invalid characters
      */
-    public static Set<BankCardTypes> getPotentialMatches(String numberString) {
+    public static Set<BankCardType> getPotentialMatches(String numberString) {
         if (numberString == null) {
             throw new NullPointerException();
         }
         if (numberString == "") {
             throw new IllegalArgumentException("numberString cannot be empty");
         }
-        HashSet<BankCardTypes> set = new HashSet<BankCardTypes>();
-        for (BankCardTypes type : BankCardTypes.values()) {
+        HashSet<BankCardType> set = new HashSet<BankCardType>();
+        for (BankCardType type : BankCardType.values()) {
             if (type.isPotentialMatch(numberString)) {
                 set.add(type);
             }
@@ -51,11 +51,11 @@ public enum BankCardTypes { // TODO: Rename to BankCardType
     private final int maxLength;
     private final NumberMatcher[] matchers;
 
-    BankCardTypes(String name, boolean usesLuhnValidation, int length, NumberMatcher... matchers) {
+    BankCardType(String name, boolean usesLuhnValidation, int length, NumberMatcher... matchers) {
         this(name, usesLuhnValidation, length, length, matchers);
     }
 
-    BankCardTypes(String name, boolean usesLuhnValidation, int minLength, int maxLength, NumberMatcher... matchers) {
+    BankCardType(String name, boolean usesLuhnValidation, int minLength, int maxLength, NumberMatcher... matchers) {
         this.name = name;
         this.usesLuhnValidation = usesLuhnValidation;
         this.minLength = minLength;
