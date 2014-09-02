@@ -73,19 +73,25 @@ public enum BankCardType {
     }
 
     /**
-     * Check if the card type is a potential match for the given card number string.
+     * Check if the card type is a potential match for the given card number string.<br />
+     * Checks:
+     * <ul>
+     *     <li>Whether the number is a potential match for any one of a set of defined patterns.</li>
+     *     <li>Whether the number is less than the maximum allowed length.</li>
+     * </ul>
      * @param numberString card number to find matching card types for (may be a partial number, and must only contain
      *                     digits and spaces)
      * @return true if this card type is a potential match
      */
     public boolean isPotentialMatch(String numberString) {
         String normalisedNumberString = BankCardNumberUtils.normaliseCardNumber(numberString);
-        for (NumberMatcher matcher : matchers) {
-            if (matcher.isPotentialMatch(normalisedNumberString)) {
-                return true;
+        if (numberString.length() <= maxLength) {
+            for (NumberMatcher matcher : matchers) {
+                if (matcher.isPotentialMatch(normalisedNumberString)) {
+                    return true;
+                }
             }
         }
-        // TODO: Exclude if length exceeds maximum
         return false;
     }
 

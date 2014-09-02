@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class BankCardTypeTests extends TestCase {
 
-    private static final String VALID_AMERICAN_EXPRESS = "34343434343434";
+    private static final String VALID_AMERICAN_EXPRESS = "343434343434343";
 
     private static final String[] PARTIALS_AMERICAN_EXPRESS = { "3", "34", "37" };
 
@@ -66,5 +66,10 @@ public class BankCardTypeTests extends TestCase {
 
     public void test_getPotentialMatches_NotMatchingAmex_ReturnedSetExcludesAmex() {
         assertFalse(BankCardType.getPotentialMatches("30").contains(BankCardType.AMERICAN_EXPRESS));
+    }
+
+    public void test_getPotentialMatches_TooLongAmex_ReturnedSetExcludesAmex() {
+        assertFalse(BankCardType.getPotentialMatches(VALID_AMERICAN_EXPRESS + "0")
+                .contains(BankCardType.AMERICAN_EXPRESS));
     }
 }
