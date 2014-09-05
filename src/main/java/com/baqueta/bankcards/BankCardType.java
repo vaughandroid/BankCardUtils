@@ -26,7 +26,7 @@ public enum BankCardType {
         if (numberString == null) {
             throw new NullPointerException();
         }
-        if (numberString == "") {
+        if (numberString.equals("")) {
             throw new IllegalArgumentException("numberString cannot be empty");
         }
         HashSet<BankCardType> set = new HashSet<BankCardType>();
@@ -72,8 +72,17 @@ public enum BankCardType {
         return usesLuhnValidation;
     }
 
+    public int getMinLength() {
+        return minLength;
+    }
+
+    public int getMaxLength() {
+        return maxLength;
+    }
+
     /**
-     * Check if the card type is a potential match for the given card number string.<br />
+     * Check if the given number string is a potential match for the card type.
+     * <p/>
      * Checks:
      * <ul>
      *     <li>Whether the number is a potential match for any one of a set of defined patterns.</li>
@@ -95,5 +104,22 @@ public enum BankCardType {
         return false;
     }
 
-    // TODO: Add validate(String numberString)
+    /**
+     * Check if the given number string is a valid for the card type.
+     * <p/>
+     * Checks:
+     * <ul>
+     *     <li>Whether the number is a potential match for any one of a set of defined patterns.</li>
+     *     <li>Whether the number length is suitable.</li>
+     *     <li>Whether the number passes a Luhn check, if applicable.</li>
+     * </ul>
+     * @param numberString card number to validate
+     * @return true if the given card number is a valid match for this card type
+     */
+    public boolean isValid(String numberString) {
+        return isPotentialMatch(numberString)
+                && numberString.length() >= minLength
+                && numberString.length() <= maxLength
+                && (!usesLuhnValidation() || BankCardNumberUtils.luhnCheck(numberString));
+    }
 }

@@ -72,4 +72,20 @@ public class BankCardTypeTests extends TestCase {
         assertFalse(BankCardType.getPotentialMatches(VALID_AMERICAN_EXPRESS + "0")
                 .contains(BankCardType.AMERICAN_EXPRESS));
     }
+
+    public void test_isValid_ValidAmex_ReturnsTrue() {
+        assertTrue(BankCardType.AMERICAN_EXPRESS.isValid(VALID_AMERICAN_EXPRESS));
+    }
+
+    public void test_isValid_TooShortOtherwiseValidAmex_ReturnsFalse() {
+        assertFalse(BankCardType.AMERICAN_EXPRESS.isValid("34343434343434"));
+    }
+
+    public void test_isValid_TooLongOtherwiseValidAmex_ReturnsFalse() {
+        assertFalse(BankCardType.AMERICAN_EXPRESS.isValid("34343434343434344"));
+    }
+
+    public void test_isValid_FailsLuhnCheckOtherwiseValidAmex_ReturnsFalse() {
+        assertFalse(BankCardType.AMERICAN_EXPRESS.isValid("3434343434343430"));
+    }
 }
