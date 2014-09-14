@@ -11,7 +11,25 @@ import java.util.Set;
  */
 public class BankCardTypeTests extends TestCase {
 
-    private static final String VALID_AMERICAN_EXPRESS = "343434343434343";
+    static final String VALID_AMERICAN_EXPRESS = "343434343434343";
+    static final String VALID_BANKCARD = ""; // TODO
+    static final String VALID_CHINA_UNIONPAY = ""; // TODO
+    static final String VALID_DINERS_CLUB_CARTE_BLANCHE = "30000000000004";
+    static final String VALID_DINERS_CLUB_ENROUTE = "201400000000009";
+    static final String VALID_DINERS_CLUB_INTERNATIONAL = "36700102000000";
+    static final String VALID_DINERS_CLUB_US_AND_CANADA = ""; // TODO
+    static final String VALID_DISCOVER = "6011000400000000";
+    static final String VALID_INTERPAYMENT = ""; // TODO
+    static final String VALID_INSTAPAYMENT = ""; // TODO
+    static final String VALID_JCB = "3528000700000000";
+    static final String VALID_LASER = "630495060000000000";
+    static final String VALID_MAESTRO = "6759649826438453";
+    static final String VALID_DANKORT = "5019717010103742";
+    static final String VALID_MASTERCARD = "5555555555554444";
+    static final String VALID_SOLO = "6334580500000000";
+    static final String VALID_SWITCH = "6331101999990016";
+    static final String VALID_VISA = "4444333322221111";
+    static final String VALID_VISA_ELECTRON = "4917300800000000";
 
     private static final String[] PARTIALS_AMERICAN_EXPRESS = { "3", "34", "37" };
 
