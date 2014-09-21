@@ -11,10 +11,15 @@ import java.util.Set;
  */
 public class BankCardTypeTests extends TestCase {
 
-    // TODO: Test normalised & non-normalised number strings for each method
+    private static final String VALID_AMEX_NORMALISED = "343434343434343";
+    private static final String VALID_AMEX_WITH_SPACES = " 3434 3434 3434 343 ";
 
-    public void test_isValid_ValidAmex_ReturnsTrue() {
-        assertTrue(BankCardType.AMERICAN_EXPRESS.isValid(ValidCardNumbers.AMERICAN_EXPRESS));
+    public void test_isValid_ValidNormalisedAmex_ReturnsTrue() {
+        assertTrue(BankCardType.AMERICAN_EXPRESS.isValid(VALID_AMEX_NORMALISED));
+    }
+
+    public void test_isValid_ValidAmexWithSpaces_ReturnsTrue() {
+        assertTrue(BankCardType.AMERICAN_EXPRESS.isValid(VALID_AMEX_WITH_SPACES));
     }
 
     public void test_isValid_TooShortOtherwiseValidAmex_ReturnsFalse() {
@@ -35,14 +40,16 @@ public class BankCardTypeTests extends TestCase {
         try {
             BankCardType.getPotentialMatches("", BankCardType.AMERICAN_EXPRESS);
             fail();
-        } catch (IllegalArgumentException expected) {}
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     public void test_getPotentialMatches_Null_ThrowsNullPointerException() {
         try {
             BankCardType.getPotentialMatches(null, BankCardType.AMERICAN_EXPRESS);
             fail();
-        } catch (NullPointerException expected) {}
+        } catch (NullPointerException expected) {
+        }
     }
 
     public void test_getPotentialMatches_UnmatchedNumber_ReturnsEmptySet() {
@@ -51,15 +58,31 @@ public class BankCardTypeTests extends TestCase {
         assertTrue("Found " + set.size() + " unexpected matches for: \"" + unmatchedNumber + "\"", set.isEmpty());
     }
 
-    public void test_getPotentialMatches_ValidAmex_ReturnedSetIncludesAmex() {
-        Set<BankCardType> set = BankCardType.getPotentialMatches(ValidCardNumbers.AMERICAN_EXPRESS, BankCardType.AMERICAN_EXPRESS);
+    public void test_getPotentialMatches_ValidNormalisedAmex_ReturnedSetIncludesAmex() {
+        Set<BankCardType> set =
+                BankCardType.getPotentialMatches(VALID_AMEX_NORMALISED, BankCardType.AMERICAN_EXPRESS);
         assertTrue(set.contains(BankCardType.AMERICAN_EXPRESS));
     }
 
-    public void test_getPotentialMatches_PartialAmex_ReturnedSetIncludesAmex() {
+    public void test_getPotentialMatches_ValidAmexWithSpaces_ReturnedSetIncludesAmex() {
+        Set<BankCardType> set =
+                BankCardType.getPotentialMatches(VALID_AMEX_WITH_SPACES, BankCardType.AMERICAN_EXPRESS);
+        assertTrue(set.contains(BankCardType.AMERICAN_EXPRESS));
+    }
+
+    public void test_getPotentialMatches_PartialNormalisedAmex_ReturnedSetIncludesAmex() {
         // TODO: Switch to JUnit 4 & use parameterised test
-        for (int i = 1; i < ValidCardNumbers.AMERICAN_EXPRESS.length() - 1; i++) {
-            String potentialMatch = ValidCardNumbers.AMERICAN_EXPRESS.substring(0, i);
+        for (int i = 1; i < VALID_AMEX_NORMALISED.length() - 1; i++) {
+            String potentialMatch = VALID_AMEX_NORMALISED.substring(0, i);
+            assertTrue("Failed for \"" + potentialMatch + "\"",
+                    BankCardType.getPotentialMatches(potentialMatch, BankCardType.AMERICAN_EXPRESS)
+                            .contains(BankCardType.AMERICAN_EXPRESS));
+        }
+    }
+    public void test_getPotentialMatches_PartialAmexWithSpaces_ReturnedSetIncludesAmex() {
+        // TODO: Switch to JUnit 4 & use parameterised test
+        for (int i = 1; i < VALID_AMEX_WITH_SPACES.length() - 1; i++) {
+            String potentialMatch = VALID_AMEX_WITH_SPACES.substring(0, i);
             assertTrue("Failed for \"" + potentialMatch + "\"",
                     BankCardType.getPotentialMatches(potentialMatch, BankCardType.AMERICAN_EXPRESS)
                             .contains(BankCardType.AMERICAN_EXPRESS));
@@ -67,12 +90,13 @@ public class BankCardTypeTests extends TestCase {
     }
 
     public void test_getPotentialMatches_NotMatchingAmex_ReturnedSetExcludesAmex() {
-        assertFalse(BankCardType.getPotentialMatches("30", BankCardType.AMERICAN_EXPRESS).contains(BankCardType.AMERICAN_EXPRESS));
+        assertFalse(BankCardType.getPotentialMatches("30", BankCardType.AMERICAN_EXPRESS)
+                .contains(BankCardType.AMERICAN_EXPRESS));
     }
 
     public void test_getPotentialMatches_TooLongAmex_ReturnedSetExcludesAmex() {
         assertFalse(
-                BankCardType.getPotentialMatches(ValidCardNumbers.AMERICAN_EXPRESS + "0", BankCardType.AMERICAN_EXPRESS)
+                BankCardType.getPotentialMatches(VALID_AMEX_NORMALISED + "0", BankCardType.AMERICAN_EXPRESS)
                         .contains(BankCardType.AMERICAN_EXPRESS));
     }
 }
