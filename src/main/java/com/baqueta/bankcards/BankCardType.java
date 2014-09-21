@@ -6,6 +6,15 @@ import java.util.Set;
 
 /**
  * Defines number pattern(s) and validation rules for a type of bank card.
+ * <p/>
+ * Valid card number patterns consist of a number of sub-patterns separated by commas. Each sub-pattern must be either a
+ * single number, or a range (low followed by high, separated by a hyphen). Spaces are allowed, and all numbers are
+ * positive. The following are all valid patterns:
+ * <ul>
+ *     <li>"1234, 5678"</li>
+ *     <li>"1234,123-456"</li>
+ *     <li>"12-34, 1 - 99 ,00"</li>
+ * </ul>
  *
  * @author c.vaughan@outlook.com
  */
@@ -28,14 +37,17 @@ public class BankCardType {
     public static final BankCardType INSTAPAYMENT = new BankCardType("637-639", true, 16);
     public static final BankCardType JCB = new BankCardType("3528-3589", true, 16, 19);
     public static final BankCardType LASER = new BankCardType("6304, 6706, 6771, 6709", true, 16, 19);
-    public static final BankCardType MAESTRO = new BankCardType("5018, 5020, 5038, 5612, 5893, 6304, 6759, 6761-6763, 0604, 6390", true, 12, 19); // TODO: confirm "0604"
+    public static final BankCardType MAESTRO =
+            new BankCardType("5018, 5020, 5038, 5612, 5893, 6304, 6759, 6761-6763, 0604, 6390", true, 12, 19); // TODO: confirm "0604"
     public static final BankCardType DANKORT = new BankCardType("5019", true, 16);
     public static final BankCardType MASTERCARD = new BankCardType("51-55", true, 16);
     public static final BankCardType SOLO = new BankCardType("6334, 6767", true, new int[] { 16, 18, 19 });
     /** Re-branded as Maestro in mid-2007. */
-    public static final BankCardType SWITCH = new BankCardType("4903, 4905, 4911, 4936, 564182, 633110, 6333, 6759", true, new int[] { 16, 18, 19 });
+    public static final BankCardType SWITCH =
+            new BankCardType("4903, 4905, 4911, 4936, 564182, 633110, 6333, 6759", true, new int[] { 16, 18, 19 });
     public static final BankCardType VISA = new BankCardType("4", true, new int[] { 13, 16 });
-    public static final BankCardType VISA_ELECTRON = new BankCardType("4026, 417500, 4405, 4508, 4844, 4913, 4917", true, 16);
+    public static final BankCardType VISA_ELECTRON =
+            new BankCardType("4026, 417500, 4405, 4508, 4844, 4913, 4917", true, 16);
 
     /**
      * Get the set of card types which potentially match a given card number string.
@@ -51,9 +63,6 @@ public class BankCardType {
         if (numberString == null) {
             throw new NullPointerException();
         }
-        if (numberString.equals("")) {
-            throw new IllegalArgumentException("numberString cannot be empty");
-        }
         HashSet<BankCardType> set = new HashSet<BankCardType>();
         for (BankCardType type : bankCardTypes) {
             if (type.isPotentialMatch(numberString)) {
@@ -68,10 +77,28 @@ public class BankCardType {
     private final int[] lengths;
     private final int maxLength;
 
+    /**
+     * Create a new bank card type.
+     *
+     * @param pattern card number pattern string (see documentation for {@link com.baqueta.bankcards.BankCardType}) for
+     *                details
+     * @param usesLuhnValidation whether numbers can be validated using Luhn checks
+     * @param length number of digits for valid card numbers
+     */
     public BankCardType(String pattern, boolean usesLuhnValidation, int length) {
         this(pattern, usesLuhnValidation, length, length);
     }
 
+    /**
+     * Create a new bank card type.
+     *
+     * @param pattern card number pattern string (see documentation for {@link com.baqueta.bankcards.BankCardType}) for
+     *                details
+     * @param usesLuhnValidation whether numbers can be validated using Luhn checks
+     * @param minLength minimum number of digits for valid card numbers
+     * @param maxLength maximum number of digits for valid card numbers
+     * @throws java.lang.IllegalArgumentException if minLength > maxLength
+     */
     public BankCardType(String pattern, boolean usesLuhnValidation, int minLength, int maxLength) {
         this.matchers = NumberPatternParser.parse(pattern);
         this.usesLuhnValidation = usesLuhnValidation;
@@ -85,6 +112,15 @@ public class BankCardType {
         this.maxLength = maxLength;
     }
 
+    /**
+     * Create a new bank card type.
+     *
+     * @param pattern card number pattern string (see documentation for {@link com.baqueta.bankcards.BankCardType}) for
+     *                details
+     * @param usesLuhnValidation whether numbers can be validated using Luhn checks
+     * @param lengths numbers of digits for valid card numbers
+     * @throws java.lang.IllegalArgumentException if no lengths are supplied
+     */
     public BankCardType(String pattern, boolean usesLuhnValidation, int[] lengths) {
         if (lengths.length == 0) {
             throw new IllegalArgumentException("You must supply a length value");
@@ -94,14 +130,6 @@ public class BankCardType {
         this.lengths = lengths;
         Arrays.sort(lengths);
         this.maxLength = lengths[lengths.length - 1];
-    }
-
-    public boolean usesLuhnValidation() {
-        return usesLuhnValidation;
-    }
-
-    public int getMaxLength() {
-        return maxLength;
     }
 
     /**
@@ -155,4 +183,6 @@ public class BankCardType {
         }
         return false;
     }
+
+    // TODO: toString() might be useful
 }
