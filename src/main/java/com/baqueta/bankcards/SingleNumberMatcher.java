@@ -7,9 +7,18 @@ package com.baqueta.bankcards;
  */
 class SingleNumberMatcher implements NumberMatcher {
 
+    private static final String REGEX_VALID = "^[0-9]*$";
+
+    public static boolean isValidPattern(String pattern) {
+        return pattern.matches(REGEX_VALID);
+    }
+
     private final String pattern;
 
     SingleNumberMatcher(String pattern) {
+        if (!isValidPattern(pattern)) {
+            throw new IllegalArgumentException("Invalid pattern: \"" + pattern + "\"");
+        }
         this.pattern = pattern;
     }
 

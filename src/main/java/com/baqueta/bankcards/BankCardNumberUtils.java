@@ -7,7 +7,7 @@ package com.baqueta.bankcards;
  */
 public class BankCardNumberUtils {
 
-    private static final String REGEX_NUMBERS_ONLY = "[0-9]*";
+    private static final String REGEX_NUMBERS_ONLY = "^[0-9]*$";
 
     /**
      * Check whether the given number passes a Luhn algorithm check.

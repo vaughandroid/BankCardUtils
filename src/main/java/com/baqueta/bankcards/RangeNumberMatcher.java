@@ -7,13 +7,19 @@ package com.baqueta.bankcards;
  */
 class RangeNumberMatcher implements NumberMatcher {
 
+    private static final String REGEX_VALID = "^[0-9]+[-][0-9]+$";
+
+    public static boolean isValidPattern(String pattern) {
+        return pattern.matches(REGEX_VALID);
+    }
+
     /**
-     * Make a normalised card number string match the given lengthby appending zeros.
+     * Make a normalised card number string match the given length by appending zeros.
      * @param normalisedCardNumberString
      * @param length required length of the returned string.
      * @return
      */
-    static String lengthen(String normalisedCardNumberString, int length) {
+    public static String lengthen(String normalisedCardNumberString, int length) {
         StringBuffer sb = new StringBuffer(length);
         sb.append(normalisedCardNumberString);
         for (int i = normalisedCardNumberString.length(); i < length; i++) {
@@ -28,14 +34,13 @@ class RangeNumberMatcher implements NumberMatcher {
     private final int checkMin;
     private final int checkMax;
 
-    RangeNumberMatcher(String min, String max) {
-        // Guard against programming errors that would screw with the logic.
-        assert(Integer.valueOf(min) < Integer.valueOf(max));
-        assert(BankCardNumberUtils.normaliseCardNumber(min).equals(min));
-        assert(BankCardNumberUtils.normaliseCardNumber(max).equals(max));
+    RangeNumberMatcher(String pattern) {
+        if (!isValidPattern(pattern)) {
+            throw new IllegalArgumentException("Invalid pattern: \"" + pattern + "\"");
+        }
 
-        this.min = min;
-        this.max = max;
+        this.min = pattern.substring(0, pattern.indexOf('-'));
+        this.max = pattern.substring(pattern.indexOf('-') + 1, pattern.length());
         checkLength = max.length();
         if (min.length() < checkLength) {
             checkMin = Integer.valueOf(lengthen(min, checkLength));
@@ -43,6 +48,10 @@ class RangeNumberMatcher implements NumberMatcher {
             checkMin = Integer.valueOf(min);
         }
         checkMax = Integer.valueOf(max);
+
+        if (checkMin >= checkMax) {
+            throw new IllegalArgumentException("Min must be less than max");
+        }
     }
 
     @Override

@@ -25,18 +25,14 @@ public class BankCardNumberUtilsTests extends TestCase {
         try {
             BankCardNumberUtils.calculateLuhnCheckDigit(null);
             fail();
-        } catch (NullPointerException e) {
-            // Expected result; do nothing.
-        }
+        } catch (NullPointerException e) {}
     }
 
     public void test_calculateLuhnCheckDigit_InvalidCharacters_ThrowsIllegalArgumentException() {
         try {
             BankCardNumberUtils.calculateLuhnCheckDigit("abcXYZ");
             fail();
-        } catch (IllegalArgumentException e) {
-            // Expected result; do nothing.
-        }
+        } catch (IllegalArgumentException e) {}
     }
 
     public void test_luhnCheck_ValidNumberNoSpaces_ReturnsTrue() {
@@ -51,36 +47,28 @@ public class BankCardNumberUtilsTests extends TestCase {
         try {
             BankCardNumberUtils.luhnCheck(null);
             fail();
-        } catch (NullPointerException e) {
-            // Expected result; do nothing.
-        }
+        } catch (NullPointerException e) {}
     }
 
     public void test_luhnCheck_EmptyString_ThrowsIllegalArgumentException() {
         try {
             BankCardNumberUtils.luhnCheck("");
             fail();
-        } catch (IllegalArgumentException e) {
-            // Expected result; do nothing.
-        }
+        } catch (IllegalArgumentException e) {}
     }
 
     public void test_luhnCheck_InvalidCharacters_ThrowsIllegalArgumentException() {
         try {
             BankCardNumberUtils.luhnCheck("abcXYZ");
             fail();
-        } catch (IllegalArgumentException e) {
-            // Expected result; do nothing.
-        }
+        } catch (IllegalArgumentException e) {}
     }
 
     public void test_luhnCheck_SingleDigit_ThrowsIllegalArgumentException() {
         try {
             BankCardNumberUtils.luhnCheck("1");
             fail();
-        } catch (IllegalArgumentException e) {
-            // Expected result; do nothing.
-        }
+        } catch (IllegalArgumentException e) {}
     }
 
     public void test_luhnCheck_CalculatedResult_ReturnsTrue() {
@@ -101,12 +89,17 @@ public class BankCardNumberUtilsTests extends TestCase {
         assertEquals("123456789", BankCardNumberUtils.normaliseCardNumber(" 1 2 34 567 89 "));
     }
 
+    public void test_normaliseCardNumber_IllegalCharacter_ThrowsIllegalArgumentException() {
+        try {
+            assertEquals("123456789", BankCardNumberUtils.normaliseCardNumber(" 1234a"));
+            fail();
+        } catch (IllegalArgumentException expected) {}
+    }
+
     public void test_normaliseCardNumber_null_ThrowsNullPointerException() {
         try {
             BankCardNumberUtils.normaliseCardNumber(null);
             fail();
-        } catch (NullPointerException e) {
-            // Expected result; do nothing.
-        }
+        } catch (NullPointerException e) {}
     }
 }

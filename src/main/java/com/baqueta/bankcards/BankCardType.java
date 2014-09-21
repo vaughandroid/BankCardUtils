@@ -1,5 +1,6 @@
 package com.baqueta.bankcards;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,38 +12,30 @@ import java.util.Set;
 public class BankCardType {
 
     // Pre-defined types.
-    public static final BankCardType AMERICAN_EXPRESS = new BankCardType(true, 15, single("34"), single("37"));
-    public static final BankCardType BANKCARD = new BankCardType(true, 16, single("5610"), range("560221", "560225"));
+    public static final BankCardType AMERICAN_EXPRESS = new BankCardType("34, 37", true, 15);
+    public static final BankCardType BANKCARD = new BankCardType("5610, 560221-560225", true, 16);
     /** These are processed by Discover. */
-    public static final BankCardType CHINA_UNIONPAY = new BankCardType(false, 16, 19, single("62"));
+    public static final BankCardType CHINA_UNIONPAY = new BankCardType("62", false, 16, 19);
     /** These are processed by Discover. */
-    public static final BankCardType DINERS_CLUB_CARTE_BLANCHE = new BankCardType(true, 14, range("300", "305"));
-    public static final BankCardType DINERS_CLUB_ENROUTE = new BankCardType(false, 15, single("2014"), single("2149"));
+    public static final BankCardType DINERS_CLUB_CARTE_BLANCHE = new BankCardType("300-305", true, 14);
+    public static final BankCardType DINERS_CLUB_ENROUTE = new BankCardType("2014, 2149", false, 15);
     /** These are treated as MasterCards in the US and Canada. They are processed by Discover. */
-    public static final BankCardType DINERS_CLUB_INTERNATIONAL = new BankCardType(true, 14, range("300", "305"), single("309"), single("36"), single("38"), single("39"));
+    public static final BankCardType DINERS_CLUB_INTERNATIONAL = new BankCardType("300-305, 309, 36, 38, 39", true, 14);
     /** These are treated as MasterCards worldwide. */
-    public static final BankCardType DINERS_CLUB_US_AND_CANADA = new BankCardType(true, 16, single("54"), single("55"));
-    public static final BankCardType DISCOVER = new BankCardType(true, 16, single("6011"), range("622126", "622925"), range("644", "649"), single("65"));
-    public static final BankCardType INTERPAYMENT = new BankCardType(true, 16, 19, single("636"));
-    public static final BankCardType INSTAPAYMENT = new BankCardType(true, 16, range("637", "639"));
-    public static final BankCardType JCB = new BankCardType(true, 16, 19, range("3528", "3589"));
-    public static final BankCardType LASER = new BankCardType(true, 16, 19, single("6304"), single("6706"), single("6771"), single("6709"));
-    public static final BankCardType MAESTRO = new BankCardType(true ,12, 19, single("5018"), single("5020"), single("5038"), single("5612"), single("5893"), single("6304"), single("6759"), range("6761", "6763"), single("0604"), single("6390")); // TODO: confirm "0604"
-    public static final BankCardType DANKORT = new BankCardType(true, 16, single("5019"));
-    public static final BankCardType MASTERCARD = new BankCardType(true, 16, range("51", "55"));
-    public static final BankCardType SOLO = new BankCardType(true, 16, 19, single("6334"), single("6767")); // TODO length can be 16, 18, or 19
+    public static final BankCardType DINERS_CLUB_US_AND_CANADA = new BankCardType("54, 55", true, 16);
+    public static final BankCardType DISCOVER = new BankCardType("6011, 622126-622925, 644-649, 65", true, 16);
+    public static final BankCardType INTERPAYMENT = new BankCardType("636", true, 16, 19);
+    public static final BankCardType INSTAPAYMENT = new BankCardType("637-639", true, 16);
+    public static final BankCardType JCB = new BankCardType("3528-3589", true, 16, 19);
+    public static final BankCardType LASER = new BankCardType("6304, 6706, 6771, 6709", true, 16, 19);
+    public static final BankCardType MAESTRO = new BankCardType("5018, 5020, 5038, 5612, 5893, 6304, 6759, 6761-6763, 0604, 6390", true, 12, 19); // TODO: confirm "0604"
+    public static final BankCardType DANKORT = new BankCardType("5019", true, 16);
+    public static final BankCardType MASTERCARD = new BankCardType("51-55", true, 16);
+    public static final BankCardType SOLO = new BankCardType("6334, 6767", true, new int[] { 16, 18, 19 });
     /** Re-branded as Maestro in mid-2007. */
-    public static final BankCardType SWITCH = new BankCardType(true, 16, 19, single("4903"), single("4905"), single("4911"), single("4936"), single("564182"), single("633110"), single("6333"), single("6759")); // TODO length can be 16, 18, or 19
-    public static final BankCardType VISA = new BankCardType(true, 13, 16, single("4")); // TODO length can be 13 or 16
-    public static final BankCardType VISA_ELECTRON = new BankCardType(true, 16, single("4026"), single("417500"), single("4405"), single("4508"), single("4844"), single("4913"), single("4917"));
-
-    private static SingleNumberMatcher single(String str) {
-        return new SingleNumberMatcher(str);
-    }
-
-    private static RangeNumberMatcher range(String min, String max) {
-        return new RangeNumberMatcher(min, max);
-    }
+    public static final BankCardType SWITCH = new BankCardType("4903, 4905, 4911, 4936, 564182, 633110, 6333, 6759", true, new int[] { 16, 18, 19 });
+    public static final BankCardType VISA = new BankCardType("4", true, new int[] { 13, 16 });
+    public static final BankCardType VISA_ELECTRON = new BankCardType("4026, 417500, 4405, 4508, 4844, 4913, 4917", true, 16);
 
     /**
      * Get the set of card types which potentially match a given card number string.
@@ -70,28 +63,41 @@ public class BankCardType {
         return set;
     }
 
-    private final boolean usesLuhnValidation;
-    private final int minLength;
-    private final int maxLength;
     private final NumberMatcher[] matchers;
+    private final boolean usesLuhnValidation;
+    private final int[] lengths;
+    private final int maxLength;
 
-    public BankCardType(boolean usesLuhnValidation, int length, NumberMatcher... matchers) {
-        this(usesLuhnValidation, length, length, matchers);
+    public BankCardType(String pattern, boolean usesLuhnValidation, int length) {
+        this(pattern, usesLuhnValidation, length, length);
     }
 
-    public BankCardType(boolean usesLuhnValidation, int minLength, int maxLength, NumberMatcher... matchers) {
+    public BankCardType(String pattern, boolean usesLuhnValidation, int minLength, int maxLength) {
+        this.matchers = NumberPatternParser.parse(pattern);
         this.usesLuhnValidation = usesLuhnValidation;
-        this.minLength = minLength;
+        if (minLength > maxLength) {
+            throw new IllegalArgumentException("minLength must be less then maxLength");
+        }
+        lengths = new int[maxLength - minLength + 1];
+        for (int i = 0; i < lengths.length; i++) {
+            lengths[i] = minLength + i;
+        }
         this.maxLength = maxLength;
-        this.matchers = matchers;
+    }
+
+    public BankCardType(String pattern, boolean usesLuhnValidation, int[] lengths) {
+        if (lengths.length == 0) {
+            throw new IllegalArgumentException("You must supply a length value");
+        }
+        this.matchers = NumberPatternParser.parse(pattern);
+        this.usesLuhnValidation = usesLuhnValidation;
+        this.lengths = lengths;
+        Arrays.sort(lengths);
+        this.maxLength = lengths[lengths.length - 1];
     }
 
     public boolean usesLuhnValidation() {
         return usesLuhnValidation;
-    }
-
-    public int getMinLength() {
-        return minLength;
     }
 
     public int getMaxLength() {
@@ -137,8 +143,16 @@ public class BankCardType {
     public boolean isValid(String numberString) {
         String normalisedNumberString = BankCardNumberUtils.normaliseCardNumber(numberString);
         return isPotentialMatch(numberString)
-                && normalisedNumberString.length() >= minLength
-                && normalisedNumberString.length() <= maxLength
+                && isLengthValid(normalisedNumberString.length())
                 && (!usesLuhnValidation() || BankCardNumberUtils.luhnCheck(numberString));
+    }
+
+    private boolean isLengthValid(int lengthToCheck) {
+        for (int length : lengths) {
+            if (lengthToCheck == length) {
+                return true;
+            }
+        }
+        return false;
     }
 }
