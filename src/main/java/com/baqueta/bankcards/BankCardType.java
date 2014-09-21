@@ -112,7 +112,7 @@ public class BankCardType {
      */
     public boolean isPotentialMatch(String numberString) {
         String normalisedNumberString = BankCardNumberUtils.normaliseCardNumber(numberString);
-        if (numberString.length() <= maxLength) {
+        if (normalisedNumberString.length() <= maxLength) {
             for (NumberMatcher matcher : matchers) {
                 if (matcher.isPotentialMatch(normalisedNumberString)) {
                     return true;
@@ -135,9 +135,10 @@ public class BankCardType {
      * @return true if the given card number is a valid match for this card type
      */
     public boolean isValid(String numberString) {
+        String normalisedNumberString = BankCardNumberUtils.normaliseCardNumber(numberString);
         return isPotentialMatch(numberString)
-                && numberString.length() >= minLength
-                && numberString.length() <= maxLength
+                && normalisedNumberString.length() >= minLength
+                && normalisedNumberString.length() <= maxLength
                 && (!usesLuhnValidation() || BankCardNumberUtils.luhnCheck(numberString));
     }
 }

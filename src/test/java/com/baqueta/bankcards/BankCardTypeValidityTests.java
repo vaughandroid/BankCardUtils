@@ -12,11 +12,11 @@ public class BankCardTypeValidityTests extends TestCase {
     }
 
     public void test_validBankcard_isValid() {
-        assertTrue("TODO", BankCardType.BANKCARD.isValid(BankCardTypeTests.VALID_BANKCARD)); // TODO
+        assertTrue(BankCardType.BANKCARD.isValid(BankCardTypeTests.VALID_BANKCARD));
     }
 
     public void test_validChinaUnionpay_isValid() {
-        assertTrue("TODO", BankCardType.CHINA_UNIONPAY.isValid(BankCardTypeTests.VALID_CHINA_UNIONPAY)); // TODO
+        assertTrue(BankCardType.CHINA_UNIONPAY.isValid(BankCardTypeTests.VALID_CHINA_UNIONPAY));
     }
 
     public void test_validDinersClubCarteBlanche_isValid() {
@@ -32,7 +32,7 @@ public class BankCardTypeValidityTests extends TestCase {
     }
 
     public void test_validDinersClubUSAndCanada_isValid() {
-        assertTrue("TODO", BankCardType.DINERS_CLUB_US_AND_CANADA.isValid(BankCardTypeTests.VALID_DINERS_CLUB_US_AND_CANADA)); // TODO
+        assertTrue(BankCardType.DINERS_CLUB_US_AND_CANADA.isValid(BankCardTypeTests.VALID_DINERS_CLUB_US_AND_CANADA));
     }
 
     public void test_validDiscover_isValid() {
@@ -40,11 +40,11 @@ public class BankCardTypeValidityTests extends TestCase {
     }
 
     public void test_validInterpayment_isValid() {
-        assertTrue("TODO", BankCardType.INTERPAYMENT.isValid(BankCardTypeTests.VALID_INTERPAYMENT)); // TODO
+        assertTrue(BankCardType.INTERPAYMENT.isValid(BankCardTypeTests.VALID_INTERPAYMENT));
     }
 
     public void test_validInstapayment_isValid() {
-        assertTrue("TODO", BankCardType.INSTAPAYMENT.isValid(BankCardTypeTests.VALID_INSTAPAYMENT)); // TODO
+        assertTrue(BankCardType.INSTAPAYMENT.isValid(BankCardTypeTests.VALID_INSTAPAYMENT));
     }
 
     public void test_validJCB_isValid() {
