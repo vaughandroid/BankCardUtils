@@ -172,7 +172,7 @@ public class BankCardType {
         String normalisedNumberString = BankCardNumberUtils.normaliseCardNumber(numberString);
         return isPotentialMatch(numberString)
                 && isLengthValid(normalisedNumberString.length())
-                && (!usesLuhnValidation() || BankCardNumberUtils.luhnCheck(numberString));
+                && (!usesLuhnValidation || BankCardNumberUtils.luhnCheck(numberString));
     }
 
     private boolean isLengthValid(int lengthToCheck) {
